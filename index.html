@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loomline – Everyday Clothing</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f5f2;--surface:#fff;--ink:#1b2130;--mute:#6b7280;--line:#dcdad3;--accent:#2f4bff;--accent-ink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--surface:#1b2030;--ink:#eef0f5;--mute:#9aa3b5;--line:#2e3547;--accent:#7b8cff;--accent-ink:#10131c}}
+:root[data-theme="dark"]{--bg:#12151c;--surface:#1b2030;--ink:#eef0f5;--mute:#9aa3b5;--line:#2e3547;--accent:#7b8cff;--accent-ink:#10131c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(16px,4vw,48px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;font-size:1.5rem;letter-spacing:-.03em}
+.cartbtn{background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:9px 18px;font-weight:600}
+.hero{padding:clamp(32px,7vw,88px) clamp(16px,4vw,48px) 24px;max-width:1200px;margin:0 auto}
+.hero h1{font-size:clamp(2.4rem,8vw,5.5rem);line-height:.95;letter-spacing:-.04em;margin:0 0 16px;font-weight:800;max-width:12ch}
+.hero p{color:var(--mute);max-width:46ch;margin:0;font-size:1.1rem}
+.bar{display:flex;gap:8px;flex-wrap:wrap;max-width:1200px;margin:24px auto 0;padding:0 clamp(16px,4vw,48px)}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:7px 16px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px;max-width:1200px;margin:24px auto 64px;padding:0 clamp(16px,4vw,48px)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.pic{aspect-ratio:1/1;display:grid;place-items:center}
+.pic svg{width:62%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.18))}
+.info{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.name{font-weight:600}
+.price{color:var(--mute)}
+.sizes{display:flex;gap:6px}
+.sizes button{flex:1;border:1px solid var(--line);background:transparent;border-radius:6px;padding:5px 0;font-size:.85rem}
+.sizes button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+.add{margin-top:auto;border:0;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:10px;font-weight:600}
+.shade{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:20}
+.shade.on{display:block}
+aside{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--surface);z-index:21;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+aside.on{transform:none}
+@media (prefers-reduced-motion:reduce){aside{transition:none}}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);font-weight:800;font-size:1.2rem}
+.x{border:0;background:transparent;font-size:1.4rem}
+.lines{flex:1;overflow:auto;padding:8px 20px}
+.line{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.thumb{width:52px;height:52px;border-radius:8px;display:grid;place-items:center;flex:none}
+.thumb svg{width:70%}
+.lt{flex:1;min-width:0}
+.lt small{color:var(--mute);display:block}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:transparent}
+.empty{color:var(--mute);padding:32px 0;text-align:center}
+.foot{padding:16px 20px;border-top:1px solid var(--line)}
+.total{display:flex;justify-content:space-between;font-weight:600;font-size:1.1rem;margin-bottom:12px}
+.foot .add{width:100%}
+.foot .add:disabled{opacity:.4;cursor:not-allowed}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+.done{padding:48px 20px;text-align:center}
+.done h2{margin:0 0 8px;font-size:1.6rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Loomline</div>
+  <button class="cartbtn" id="open" aria-label="Open cart">Cart (<span id="count">0</span>)</button>
+</header>
+<section class="hero">
+  <h1>Clothes made to wear on repeat.</h1>
+  <p>Simple cuts, soft fabrics, and colors that go with everything. Free shipping over $100.</p>
+</section>
+<div class="bar" id="filters" role="group" aria-label="Filter by category"></div>
+<main class="grid" id="grid"></main>
+<div class="shade" id="shade"></div>
+<aside id="drawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="dh"><span>Your cart</span><button class="x" id="close" aria-label="Close cart">×</button></div>
+  <div class="lines" id="lines"></div>
+  <div class="foot"><div class="total"><span>Total</span><span id="total">$0.00</span></div><button class="add" id="checkout">Place order</button></div>
+</aside>
+<div class="toast" id="toast" role="status"></div>
+<script>
+var G={tee:'<path d="M30 15 L10 28 L20 40 L28 34 L28 85 L72 85 L72 34 L80 40 L90 28 L70 15 Q50 28 30 15Z"/>',
+hood:'<path d="M28 18 L8 70 L22 74 L30 48 L30 88 L70 88 L70 48 L78 74 L92 70 L72 18 Q50 36 28 18Z"/><rect x="38" y="62" width="24" height="14" rx="3" fill="rgba(0,0,0,.18)"/>',
+pant:'<path d="M30 10 H70 L74 90 H55 L50 40 L45 90 H26Z"/>'};
+var P=[
+{id:1,n:'Everyday tee',c:'Tops',p:28,g:'tee',col:'#e9e4d6',bg:'#d8e0f5'},
+{id:2,n:'Heavyweight tee',c:'Tops',p:36,g:'tee',col:'#2f4bff',bg:'#f1ece0'},
+{id:3,n:'Boxy tee',c:'Tops',p:32,g:'tee',col:'#2e3a2c',bg:'#e6e1d3'},
+{id:4,n:'Fleece hoodie',c:'Hoodies',p:68,g:'hood',col:'#7a8794',bg:'#f2e6d4'},
+{id:5,n:'Zip hoodie',c:'Hoodies',p:78,g:'hood',col:'#1b2130',bg:'#dfe3ee'},
+{id:6,n:'Oversized hoodie',c:'Hoodies',p:72,g:'hood',col:'#c9b79c',bg:'#d7e4e0'},
+{id:7,n:'Straight chinos',c:'Bottoms',p:58,g:'pant',col:'#a98f6a',bg:'#e0e6f2'},
+{id:8,n:'Relaxed jeans',c:'Bottoms',p:64,g:'pant',col:'#3b5b8c',bg:'#efe8da'},
+{id:9,n:'Jogger pants',c:'Bottoms',p:52,g:'pant',col:'#4a4f58',bg:'#e7e2d6'}];
+var SZ=['S','M','L','XL'],sel={},cart=[],cat='All';
+var $=function(i){return document.getElementById(i)};
+function svg(p){return '<svg viewBox="0 0 100 100" fill="'+p.col+'" aria-hidden="true">'+G[p.g]+'</svg>'}
+function money(n){return '$'+n.toFixed(2)}
+function filters(){var h='';['All','Tops','Hoodies','Bottoms'].forEach(function(c){h+='<button class="chip" aria-pressed="'+(c===cat)+'" data-c="'+c+'">'+c+'</button>'});$('filters').innerHTML=h}
+function grid(){var h='';P.filter(function(p){return cat==='All'||p.c===cat}).forEach(function(p){
+var s=sel[p.id]||'M';
+h+='<article class="card"><div class="pic" style="background:'+p.bg+'">'+svg(p)+'</div><div class="info"><div><div class="name">'+p.n+'</div><div class="price">'+money(p.p)+'</div></div><div class="sizes" role="group" aria-label="Size for '+p.n+'">';
+SZ.forEach(function(z){h+='<button aria-pressed="'+(z===s)+'" data-s="'+z+'" data-id="'+p.id+'">'+z+'</button>'});
+h+='</div><button class="add" data-add="'+p.id+'">Add to cart</button></div></article>'});$('grid').innerHTML=h}
+function render(){var n=0,t=0,h='';cart.forEach(function(l,i){var p=P.filter(function(x){return x.id===l.id})[0];n+=l.q;t+=l.q*p.p;
+h+='<div class="line"><div class="thumb" style="background:'+p.bg+'">'+svg(p)+'</div><div class="lt"><div>'+p.n+'</div><small>Size '+l.s+' · '+money(p.p)+'</small></div><div class="qty"><button data-d="-1" data-i="'+i+'" aria-label="Remove one">−</button><span>'+l.q+'</span><button data-d="1" data-i="'+i+'" aria-label="Add one">+</button></div></div>'});
+$('lines').innerHTML=h||'<div class="empty">Your cart is empty. Pick a size and add something.</div>';
+$('count').textContent=n;$('total').textContent=money(t);$('checkout').disabled=!n}
+function toast(m){var e=$('toast');e.textContent=m;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){e.classList.remove('on')},1600)}
+function drawer(o){$('drawer').classList.toggle('on',o);$('shade').classList.toggle('on',o);$('drawer').setAttribute('aria-hidden',!o)}
+$('filters').onclick=function(e){var c=e.target.dataset.c;if(c){cat=c;filters();grid()}};
+$('grid').onclick=function(e){var d=e.target.dataset;
+if(d.s){sel[d.id]=d.s;grid()}
+if(d.add){var id=+d.add,s=sel[id]||'M',f=cart.filter(function(l){return l.id===id&&l.s===s})[0];
+if(f)f.q++;else cart.push({id:id,s:s,q:1});render();toast('Added to cart')}};
+$('lines').onclick=function(e){var d=e.target.dataset;if(d.i!==undefined){var l=cart[+d.i];l.q+=+d.d;if(l.q<1)cart.splice(+d.i,1);render()}};
+$('open').onclick=function(){drawer(true)};$('close').onclick=$('shade').onclick=function(){drawer(false)};
+document.onkeydown=function(e){if(e.key==='Escape')drawer(false)};
+$('checkout').onclick=function(){var no='LL-'+Math.floor(10000+Math.random()*90000);cart=[];render();
+$('lines').innerHTML='<div class="done"><h2>Order placed</h2><p>Your order number is '+no+'. This is a demo store, so no payment was taken.</p></div>'};
+filters();grid();render();
+</script>
+</body>
+</html>
